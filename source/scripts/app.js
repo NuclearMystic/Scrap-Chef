@@ -1,102 +1,87 @@
 document.addEventListener("DOMContentLoaded", () => {
-    loadIngredients();
+    loadIngredients(); // From ingredients.js
 
     document.getElementById("generate-recipe").addEventListener("click", () => {
         const selectedIngredients = getSelectedIngredients();
+
         if (selectedIngredients.length === 0) {
-            alert("Please select at least one ingredient.");
+            alert("Please add at least one ingredient to generate a recipe.");
             return;
         }
-        generateRecipe(selectedIngredients);
-    });
-});
 
-// Fetch available ingredients from the API
-function loadIngredients() {
-    fetch("api/ingredients.php")
+        console.log("Sending to API:", JSON.stringify({ ingredients: selectedIngredients }));
+
+        fetch("api/generate_recipe.php", {
+            method: "POST",
+            headers: { "Content-Type": "application/json" },
+            body: JSON.stringify({ ingredients: selectedIngredients })
+        })
         .then(response => response.json())
         .then(data => {
-            console.log("Fetched ingredients:", data); // Debugging log
-            const ingredientList = document.getElementById("ingredient-list");
-            ingredientList.innerHTML = "";
-            if (!Array.isArray(data) || data.length === 0) {
-                ingredientList.innerHTML = "<p>No ingredients found.</p>";
-                return;
+            console.log("API Response:", data);
+            const recipeResult = document.getElementById("recipe-result");
+            if (data.error) {
+                recipeResult.innerHTML = `<p class="error">${data.error}</p>`;
+            } else {
+                recipeResult.innerHTML = `
+                    <h3>${data.name}</h3>
+                    <h4>Ingredients:</h4>
+                    <ul>
+                        ${data.ingredients.map(i => `<li>${i.name} - ${i.quantity}</li>`).join("")}
+                    </ul>
+                    <h4>Instructions:</h4>
+                    <ol>
+                        ${data.instructions.map(i => `<li>${i}</li>`).join("")}
+                    </ol>
+                `;
             }
-            data.forEach(ingredient => {
-                const checkbox = document.createElement("input");
-                checkbox.type = "checkbox";
-                checkbox.value = ingredient.name;
-                checkbox.id = "ingredient_" + ingredient.id;
-                
-                const label = document.createElement("label");
-                label.htmlFor = checkbox.id;
-                label.textContent = ingredient.name;
-
-                const div = document.createElement("div");
-                div.classList.add("ingredient-item");
-                div.appendChild(checkbox);
-                div.appendChild(label);
-
-                ingredientList.appendChild(div);
-            });
         })
-        .catch(error => {
-            console.error("Error loading ingredients:", error);
-            document.getElementById("ingredient-list").innerHTML = "<p>Error fetching ingredients.</p>";
-        });
-}
+        .catch(error => console.error("Error generating recipe:", error));
+    });
 
+    document.getElementById("add-ingredient-form").addEventListener("submit", addIngredient);
+});
 
-// Get selected ingredients
+// ✅ Get all ingredients from the "Selected Ingredients" table (NO CHECKBOXES)
 function getSelectedIngredients() {
-    const checkboxes = document.querySelectorAll("#ingredient-list input:checked");
-    return Array.from(checkboxes).map(cb => cb.value);
+    const selectedRows = document.querySelectorAll("#selected-ingredients tr");
+
+    return Array.from(selectedRows).map(row => ({
+        id: row.dataset.ingredientId, // Ensure the ID is properly stored
+        name: row.querySelector("td:nth-child(1)")?.textContent.trim(),
+        quantity: row.querySelector("td:nth-child(2)")?.textContent.trim()
+    })).filter(ingredient => ingredient.id && ingredient.name && ingredient.quantity);
 }
 
-// Send selected ingredients to API and display recipe
-function generateRecipe(ingredients) {
-    const button = document.getElementById("generate-recipe");
-    const buttonText = button.querySelector(".button-text");
-    const spinner = button.querySelector(".spinner");
+// ✅ Function to add a new ingredient
+function addIngredient(event) {
+    event.preventDefault();
 
-    // Show loading state
-    buttonText.style.display = "none";
-    spinner.style.display = "inline-block";
-    button.classList.add("loading");
-    button.disabled = true;
+    const name = document.getElementById("ingredient-name").value.trim();
+    const quantity = document.getElementById("ingredient-quantity").value;
+    const price = document.getElementById("ingredient-price").value;
 
-    fetch("api/generate_recipe.php", {
+    if (!name || quantity <= 0 || price < 0) {
+        alert("Please enter valid ingredient details.");
+        return;
+    }
+
+    fetch("api/ingredients.php", {
         method: "POST",
         headers: { "Content-Type": "application/json" },
-        body: JSON.stringify({ ingredients })
+        body: JSON.stringify({ name, quantity, current_price: price })
     })
     .then(response => response.json())
     .then(data => {
-        const recipeResult = document.getElementById("recipe-result");
         if (data.error) {
-            recipeResult.innerHTML = `<p class="error">${data.error}</p>`;
+            alert(data.error);
         } else {
-            const cleanedInstructions = data.instructions.map(step => step.replace(/\n/g, '').trim());
-
-            recipeResult.innerHTML = `
-                <h3>${data.name}</h3>
-                <h4>Ingredients:</h4>
-                <ul>${data.ingredients.map(i => `<li>${i}</li>`).join("")}</ul>
-                <h4>Instructions:</h4>
-                <ol>${cleanedInstructions.map(i => `<li>${i}</li>`).join("")}</ol>
-            `;
+            loadIngredients(); // Refresh list after adding
+            document.getElementById("add-ingredient-form").reset(); // Clear form
         }
     })
-    .catch(error => console.error("Error generating recipe:", error))
-    .finally(() => {
-        // Restore button text after recipe loads
-        buttonText.style.display = "inline";
-        spinner.style.display = "none";
-        button.classList.remove("loading");
-        button.disabled = false;
+    .catch(error => {
+        console.error("Error adding ingredient:", error);
+        error.text().then(text => console.error("Server response:", text)); // Log full response
     });
 }
-
-
-

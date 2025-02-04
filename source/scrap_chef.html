@@ -1,0 +1,99 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Scrap Chef</title>
+    <link rel="stylesheet" href="styles/scrap_chef.css">
+</head>
+<body>
+    <header>
+        <h1>Scrap Chef</h1>
+        <nav>
+            <a href="dashboard.html">← Back to Dashboard</a>
+        </nav>
+    </header>
+
+    <main class="container">
+        <!-- Left Panel: Add Ingredient Form -->
+        <section id="add-ingredient-section">
+            <h2>Add Ingredient</h2>
+            <form id="add-ingredient-form">
+                <label for="ingredient-name">Ingredient Name</label>
+                <input type="text" id="ingredient-name" placeholder="Enter ingredient name" aria-label="Ingredient Name" required>
+
+                <label for="ingredient-quantity">Quantity</label>
+                <input type="number" id="ingredient-quantity" placeholder="Enter quantity" aria-label="Ingredient Quantity" min="0" step="1" required>
+
+                <label for="ingredient-price">Price per Unit</label>
+                <input type="number" id="ingredient-price" placeholder="Enter price per unit" aria-label="Ingredient Price" min="0" step="0.01" required>
+
+                <button type="submit">Add Ingredient</button>
+            </form>
+        </section>
+
+        <!-- Middle Panel: Available Ingredients List -->
+        <section id="ingredient-list-section">
+            <h2>Available Ingredients</h2>
+            <table>
+                <thead>
+                    <tr>
+                        <th>Select</th>
+                        <th>Ingredient</th>
+                        <th>Quantity</th>
+                        <th>Price</th>
+                    </tr>
+                </thead>
+                <tbody id="ingredient-list">
+                    <!-- Ingredients will be dynamically added here -->
+                </tbody>
+            </table>
+            <button id="add-selected-ingredients">Add Selected to Recipe</button>
+            <button id="remove-selected-ingredients-list" class="remove-button">Remove Selected</button>
+        </section>
+
+        <!-- Right Panel: Selected Ingredients & Generate Recipe -->
+        <!-- Right Panel: Selected Ingredients & Generate Recipe -->
+        <section id="selected-ingredients-section">
+            <h2>Selected Ingredients</h2>
+            <table>
+                <thead>
+                    <tr>
+                        <th>Ingredient</th>
+                        <th>Quantity</th>
+                        <th style="display: none;">ID</th>
+                    </tr>
+                </thead>
+                <tbody id="selected-ingredients">
+                    <!-- Selected ingredients will be dynamically added here -->
+                </tbody>
+            </table>
+            <button id="remove-selected-ingredients">Remove Selected</button>
+            <button id="generate-recipe">
+                <span class="button-text">Generate Recipe</span>
+                <span class="spinner" style="display: none;">Loading...</span>
+            </button>
+
+            <h2>Generated Recipe</h2>
+            <table>
+                <thead>
+                    <tr>
+                        <th>Recipe</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    <tr>
+                        <td id="recipe-result">
+                            <p>Select ingredients and click "Generate Recipe".</p>
+                        </td>
+                    </tr>
+                </tbody>
+            </table>
+        </section>
+    </main>
+
+    <script src="scripts/ingredients.js"></script>
+    <script src="scripts/recipe.js"></script>
+    <script src="scripts/app.js"></script>
+</body>
+</html>

@@ -1,0 +1,152 @@
+body {
+    font-family: Arial, sans-serif;
+    margin: 20px;
+    background-color: #f8f8f8;
+    color: #333;
+}
+
+.container {
+    display: flex;
+    flex-wrap: wrap;
+    justify-content: space-between;
+    max-width: 1200px;
+    margin: auto;
+    padding: 20px;
+    background: white;
+    border-radius: 8px;
+    box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
+}
+
+/* Panel Styling */
+section {
+    flex: 1;
+    min-width: 320px; /* Adjusted for better layout */
+    padding: 20px;
+    background: #ffffff;
+    border-radius: 8px;
+    box-shadow: 0 0 5px rgba(0, 0, 0, 0.1);
+    margin: 10px;
+}
+
+/* Headers */
+h1 {
+    background-color: #50C878;
+    color: white;
+    padding: 15px 20px;
+    text-align: center;
+    box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+    font-size: 24px;
+}
+
+h2 {
+    font-size: 20px;
+    color: #50C878;
+    margin-bottom: 15px;
+}
+
+/* Form Adjustments */
+form {
+    display: flex;
+    flex-direction: column;
+    gap: 10px; /* Adds spacing between form elements */
+}
+
+label {
+    font-weight: bold;
+    color: #444;
+}
+
+input {
+    width: 100%;
+    padding: 8px;
+    border: 1px solid #ddd;
+    border-radius: 5px;
+    font-size: 14px;
+}
+
+button {
+    display: block;
+    width: 100%;
+    padding: 10px;
+    margin-top: 10px;
+    background: #50C878;
+    color: white;
+    border: none;
+    border-radius: 5px;
+    cursor: pointer;
+    font-size: 16px;
+}
+
+button:hover {
+    background: #3a9257;
+}
+
+/* Remove Button Style */
+.remove-button {
+    background: #d9534f;
+    color: white;
+    border: none;
+    border-radius: 5px;
+    padding: 10px;
+    cursor: pointer;
+    font-size: 16px;
+}
+
+.remove-button:hover {
+    background: #c9302c;
+}
+
+/* Table Styles */
+table {
+    width: 100%;
+    border-collapse: collapse;
+    margin-top: 10px;
+}
+
+thead {
+    background: #50C878;
+    color: white;
+}
+
+thead th {
+    padding: 10px;
+    text-align: left;
+}
+
+tbody tr:nth-child(even) {
+    background: #f2f2f2;
+}
+
+tbody tr:hover {
+    background: #ddd;
+}
+
+td, th {
+    border: 1px solid #ddd;
+    padding: 8px;
+}
+
+/* Adjust spacing for checkboxes */
+input[type="checkbox"] {
+    width: 16px;
+    height: 16px;
+}
+
+/* Recipe Result Styling */
+#recipe-result {
+    background: #f9f9f9;
+    padding: 10px;
+    border-radius: 5px;
+    font-size: 16px;
+}
+
+/* Responsive Design */
+@media (max-width: 768px) {
+    .container {
+        flex-direction: column;
+    }
+
+    table {
+        font-size: 14px;
+    }
+}
